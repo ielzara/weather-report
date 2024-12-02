@@ -3,7 +3,7 @@ let temperature = 88;
 const tempDisplay = document.getElementById('tempValue');
 tempDisplay.innerText = temperature;
 
-const addOneTemp = (e) => {
+const addOneTemp = () => {
     console.log(temperature)
     temperature += 1;
     tempDisplay.innerText = temperature;
