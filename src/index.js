@@ -79,7 +79,7 @@ cityNameInput.addEventListener('input', updateCityName);
 const getWeather = (lat, lon) => {
     return axios
         .get(`http://localhost:5000/weather?lat=${lat}&lon=${lon}`)
-        .then((response) => {
+      .then((response) => {
             return response.data;
         })
         .catch((error) => {
@@ -92,7 +92,7 @@ const getLocation = (cityName) => {
     return axios
         .get(`http://localhost:5000/location?q=${cityName}`)
         .then((response) => {
-            return response.data[0];
+          return response.data[0];
         })
         .catch((error) => {
             console.log(`Error is: ${error}`);
@@ -105,8 +105,8 @@ const getCurrentTemp = async () => {
         const cityName = cityNameDisplay.innerText;
         const locationData = await getLocation(cityName);
         const weatherData = await getWeather(locationData.lat, locationData.lon);
-        const temperatureKelvin = weatherData.current.temp;
-        temperature = (temperatureKelvin - 273.15) * 9/5 + 32;
+        const temperatureKelvin = weatherData.main.temp; // main instead of current
+        temperature = Math.round((temperatureKelvin - 273.15) * 9/5 + 32); // Added Math.round
         tempDisplay.innerText = temperature;
         updateDisplay();
     }
