@@ -61,6 +61,13 @@ grid-row: 2;
     border-radius: 10px
 }
 
+#increaseTempControl:hover,
+#decreaseTempControl:hover,
+#currentTempButton:hover,
+#cityNameReset:hover {
+    cursor: pointer;
+}
+
 .sky__section {
 grid-row: 3;
 }
@@ -74,6 +81,10 @@ grid-row: 2 / span 3;
 grid-column: 2;
 text-align: center;
 align-self: center;
+width: 100%;
+display: flex;
+flex-direction: column;
+align-items: center;
 }
 
 .temperature__content {
@@ -98,11 +109,12 @@ align-items: center;
 
 .garden__section > h2 {
 color: white;
+margin-bottom: 1rem;
 }
 
 .garden__content {
-min-height: 200px;
-max-width: fit-content;
+min-height: 300px;
+width: fit-content;
 margin: auto;
 padding: 2rem;
 
@@ -112,6 +124,11 @@ justify-content: space-between;
 
 border-radius: 8px;
 font-size: 2em;
+border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#sky {
+margin-bottom: 2rem; 
 }
 
 .city-name__reset-btn {
