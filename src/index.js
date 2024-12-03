@@ -4,6 +4,8 @@ const decreaseTemp = document.getElementById('decreaseTempControl');
 const landscape = document.getElementById('landscape');
 const cityNameDisplay = document.getElementById('headerCityName');
 const cityNameInput = document.getElementById('cityNameInput')
+const tempButton = document.getElementById('currentTempButton');
+
 
 let temperature = 88;
 tempDisplay.innerText = temperature;
@@ -71,5 +73,47 @@ const updateCityName = () => {
 };
 
 cityNameInput.addEventListener('input', updateCityName);
+
+
+// function that gets weather data
+const getWeather = (lat, lon) => {
+    return axios
+        .get(`http://localhost:5000/weather?lat=${lat}&lon=${lon}`)
+        .then((response) => {
+            return response.data;
+        })
+        .catch((error) => {
+            console.log(`Error is: ${error}`);
+        });
+};
+
+// function that gets location 
+const getLocation = (cityName) => {
+    return axios
+        .get(`http://localhost:5000/location?q=${cityName}`)
+        .then((response) => {
+            return response.data[0];
+        })
+        .catch((error) => {
+            console.log(`Error is: ${error}`);
+        });
+};
+
+// function that updates current temp using location and weather data
+const getCurrentTemp = async () => {
+    try {
+        const cityName = cityNameDisplay.innerText;
+        const locationData = await getLocation(cityName);
+        const weatherData = await getWeather(locationData.lat, locationData.lon);
+        const temperatureKelvin = weatherData.current.temp;
+        temperature = (temperatureKelvin - 273.15) * 9/5 + 32;
+        tempDisplay.innerText = temperature;
+        updateDisplay();
+    }
+    catch(error) {
+        console.log(error);
+    };
+};
+tempButton.addEventListener('click', getCurrentTemp);
 
 updateDisplay();
