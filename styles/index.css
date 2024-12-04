@@ -49,11 +49,13 @@ background-color: white;
 grid-row: 2;
 }
 
-.temperature__section button {
+.temperature__section button,
+.fahrenheitOrCelcius {
     background-color: #1b69f9;
     border: none;
     color: white;
     padding: 15px 32px;
+    margin: 10px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -64,7 +66,8 @@ grid-row: 2;
 #increaseTempControl:hover,
 #decreaseTempControl:hover,
 #currentTempButton:hover,
-#cityNameReset:hover {
+#cityNameReset:hover,
+#fahrenheitToCelcius:hover {
     cursor: pointer;
 }
 
@@ -178,4 +181,8 @@ background-color: lightblue;
 
 .snowy {
 background-color: lightsteelblue;
+}
+
+.cloudy-to-rainy {
+    background: linear-gradient(to right, lightgrey, lightblue);
 }

@@ -10,6 +10,9 @@ const gardenContent = document.getElementById('gardenContent');
 const skyDisplay = document.getElementById('sky');
 const resetButton = document.getElementById('cityNameReset');
 const defaultCity = 'Seattle';
+const fahrenheitOrCelcius = document.getElementById('fahrenheitOrCelcius');
+const bodyElement = document.body;
+
 
 let temperature = 88;
 tempDisplay.innerText = temperature;
@@ -47,9 +50,26 @@ let landscapeDisplay;
     landscape.innerText = landscapeDisplay;
 };
 
+// Changing the temperature should change the page's background
+const updateBackgroundColor = () => {
+    bodyElement.classList.remove('sunny', 'cloudy', 'rainy', 'snowy', 'cloudy-to-rainy');
+    if (temperature >= 80) {
+        bodyElement.classList.add('sunny');
+    } else if (temperature >= 70) {
+        bodyElement.classList.add('cloudy');
+    } else if (temperature >= 60) {
+        bodyElement.classList.add('rainy');
+    } else if (temperature >= 50) {
+        bodyElement.classList.add('cloudy-to-rainy');
+    } else {
+        bodyElement.classList.add('snowy');
+    }
+};
+
 const updateDisplay = () => {
     updateTempColor();
     updateLandscape();
+    updateBackgroundColor();
 };
 
 const addOneTemp = () => {
@@ -81,7 +101,7 @@ cityNameInput.addEventListener('input', updateCityName);
 const getWeather = (lat, lon) => {
     return axios
         .get(`http://localhost:5000/weather?lat=${lat}&lon=${lon}`)
-      .then((response) => {
+        .then((response) => {
             return response.data;
         })
         .catch((error) => {
@@ -94,7 +114,7 @@ const getLocation = (cityName) => {
     return axios
         .get(`http://localhost:5000/location?q=${cityName}`)
         .then((response) => {
-          return response.data[0];
+            return response.data[0];
         })
         .catch((error) => {
             console.log(`Error is: ${error}`);
@@ -109,7 +129,7 @@ const getCurrentTemp = async () => {
         const weatherData = await getWeather(locationData.lat, locationData.lon);
         const temperatureKelvin = weatherData.main.temp;
         temperature = Math.round((temperatureKelvin - 273.15) * 9/5 + 32); 
-        tempDisplay.innerText = temperature;
+        tempDisplay.innerText = `${temperature} °F`;
         updateDisplay();
     }
     catch(error) {
@@ -124,6 +144,12 @@ const skyOptions = [
     { name: 'Cloudy', display: '☁️☁️ ☁️ ☁️☁️ ☁️ 🌤 ☁️ ☁️☁️' },
     { name: 'Rainy', display: '🌧🌈⛈🌧🌧💧⛈🌧🌦🌧💧🌧🌧' },
     { name: 'Snowy', display: '🌨❄️🌨🌨❄️❄️🌨❄️🌨❄️❄️🌨🌨' }
+];
+const skyChangeBackgroundColor = [
+    {name: 'Sunny', backgroundColor: 'sunny'},
+    {name: 'Cloudy', backgroundColor: 'cloudy'},
+    {name: 'Rainy', backgroundColor: 'rainy'},
+    {name: 'Snowy', backgroundColor: 'snowy'}
 ];
 
 // create option element in skySelect area
@@ -142,6 +168,10 @@ const updateSky = (event) => {
     // update sky display with emojis
     const selectedOption = skyOptions.find(option => option.name.toLowerCase() === event.target.value);
     skyDisplay.textContent = selectedOption.display;
+     // Optional:Update the background color of the body element based on selected sky
+    const selectedSky = skyChangeBackgroundColor.find(option => option.name.toLowerCase() === event.target.value);
+    bodyElement.classList.remove('sunny', 'cloudy', 'rainy', 'snowy');
+    bodyElement.classList.add(selectedSky.backgroundColor);
 };
 
 skySelect.addEventListener('change', updateSky);
@@ -160,3 +190,24 @@ resetButton.addEventListener('click', cityDefault);
 
 cityDefault();
 updateDisplay();
+
+
+// Optional enhancements
+//Change temp between F to C and vice versa on click of button and display F or C
+const changeFtoC = () => {
+    temperature = Math.round((temperature - 32) * 5/9);
+    tempDisplay.innerText = `${temperature} °C`;
+    fahrenheitOrCelcius.removeEventListener('click', changeFtoC);
+    fahrenheitOrCelcius.addEventListener('click', changeCtoF);
+};
+
+// Change temp between C to F on click of button and display F 
+const changeCtoF = () => {
+    temperature = Math.round((temperature * 9/5) + 32);
+    tempDisplay.innerText = `${temperature} °F`;
+    fahrenheitOrCelcius.removeEventListener('click', changeCtoF);
+    fahrenheitOrCelcius.addEventListener('click', changeFtoC);
+};
+
+fahrenheitOrCelcius.addEventListener('click',changeFtoC);
+
