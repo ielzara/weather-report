@@ -145,7 +145,7 @@ const updateSky = (event) => {
 };
 
 skySelect.addEventListener("change", updateSky);
-// start with su
+// start with sunny
 gardenContent.classList.add("sunny");
 skyDisplay.textContent = skyOptions[0].display;
 
