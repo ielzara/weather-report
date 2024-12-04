@@ -5,9 +5,11 @@ const landscape = document.getElementById('landscape');
 const cityNameDisplay = document.getElementById('headerCityName');
 const cityNameInput = document.getElementById('cityNameInput')
 const tempButton = document.getElementById('currentTempButton');
-const skySelect = document.getElementById("skySelect");
-const gardenContent = document.getElementById("gardenContent");
-const skyDisplay = document.getElementById("sky");
+const skySelect = document.getElementById('skySelect');
+const gardenContent = document.getElementById('gardenContent');
+const skyDisplay = document.getElementById('sky');
+const resetButton = document.getElementById('cityNameReset');
+const defaultCity = 'Seattle';
 
 let temperature = 88;
 tempDisplay.innerText = temperature;
@@ -51,7 +53,6 @@ const updateDisplay = () => {
 };
 
 const addOneTemp = () => {
-    // console.log(temperature)
     temperature += 1;
     tempDisplay.innerText = temperature;
     
@@ -59,7 +60,6 @@ const addOneTemp = () => {
 }; 
 
 const reduceOneTemp = () => {
-    // console.log(temperature) 
     temperature -= 1;
     tempDisplay.innerText = temperature;
 
@@ -107,8 +107,8 @@ const getCurrentTemp = async () => {
         const cityName = cityNameDisplay.innerText;
         const locationData = await getLocation(cityName);
         const weatherData = await getWeather(locationData.lat, locationData.lon);
-        const temperatureKelvin = weatherData.main.temp; // main instead of current
-        temperature = Math.round((temperatureKelvin - 273.15) * 9/5 + 32); // Added Math.round
+        const temperatureKelvin = weatherData.main.temp;
+        temperature = Math.round((temperatureKelvin - 273.15) * 9/5 + 32); 
         tempDisplay.innerText = temperature;
         updateDisplay();
     }
@@ -120,15 +120,15 @@ tempButton.addEventListener('click', getCurrentTemp);
 
 // sky options with corresponding clouds
 const skyOptions = [
-    { name: "Sunny", display: "☁️ ☁️ ☁️ ☀️ ☁️ ☁️" },
-    { name: "Cloudy", display: "☁️☁️ ☁️ ☁️☁️ ☁️ 🌤 ☁️ ☁️☁️" },
-    { name: "Rainy", display: "🌧🌈⛈🌧🌧💧⛈🌧🌦🌧💧🌧🌧" },
-    { name: "Snowy", display: "🌨❄️🌨🌨❄️❄️🌨❄️🌨❄️❄️🌨🌨" }
+    { name: 'Sunny', display: '☁️ ☁️ ☁️ ☀️ ☁️ ☁️' },
+    { name: 'Cloudy', display: '☁️☁️ ☁️ ☁️☁️ ☁️ 🌤 ☁️ ☁️☁️' },
+    { name: 'Rainy', display: '🌧🌈⛈🌧🌧💧⛈🌧🌦🌧💧🌧🌧' },
+    { name: 'Snowy', display: '🌨❄️🌨🌨❄️❄️🌨❄️🌨❄️❄️🌨🌨' }
 ];
 
 // create option element in skySelect area
 skyOptions.forEach(option => {
-    const optionElement = document.createElement("option");
+    const optionElement = document.createElement('option');
     optionElement.value = option.name.toLowerCase();
     optionElement.textContent = option.name;
     skySelect.appendChild(optionElement);
@@ -136,7 +136,7 @@ skyOptions.forEach(option => {
 
 const updateSky = (event) => {
     // remove all possible sky classes
-    gardenContent.classList.remove("sunny", "cloudy", "rainy", "snowy");
+    gardenContent.classList.remove('sunny', 'cloudy', 'rainy', 'snowy');
     // add the selected sky class to gardenContent so that background color also changes
     gardenContent.classList.add(event.target.value);
     // update sky display with emojis
@@ -144,9 +144,19 @@ const updateSky = (event) => {
     skyDisplay.textContent = selectedOption.display;
 };
 
-skySelect.addEventListener("change", updateSky);
+skySelect.addEventListener('change', updateSky);
 // start with sunny
-gardenContent.classList.add("sunny");
+gardenContent.classList.add('sunny');
 skyDisplay.textContent = skyOptions[0].display;
 
+// Reset button: function to reset city to 'Seattle'
+const cityDefault = () => {
+    cityNameInput.value = defaultCity;
+    cityNameDisplay.innerText = defaultCity;
+    getCurrentTemp();
+};
+
+resetButton.addEventListener('click', cityDefault);
+
+cityDefault();
 updateDisplay();
