@@ -5,7 +5,9 @@ const landscape = document.getElementById('landscape');
 const cityNameDisplay = document.getElementById('headerCityName');
 const cityNameInput = document.getElementById('cityNameInput')
 const tempButton = document.getElementById('currentTempButton');
-
+const skySelect = document.getElementById("skySelect");
+const gardenContent = document.getElementById("gardenContent");
+const skyDisplay = document.getElementById("sky");
 
 let temperature = 88;
 tempDisplay.innerText = temperature;
@@ -115,5 +117,36 @@ const getCurrentTemp = async () => {
     };
 };
 tempButton.addEventListener('click', getCurrentTemp);
+
+// sky options with corresponding clouds
+const skyOptions = [
+    { name: "Sunny", display: "☁️ ☁️ ☁️ ☀️ ☁️ ☁️" },
+    { name: "Cloudy", display: "☁️☁️ ☁️ ☁️☁️ ☁️ 🌤 ☁️ ☁️☁️" },
+    { name: "Rainy", display: "🌧🌈⛈🌧🌧💧⛈🌧🌦🌧💧🌧🌧" },
+    { name: "Snowy", display: "🌨❄️🌨🌨❄️❄️🌨❄️🌨❄️❄️🌨🌨" }
+];
+
+// create option element in skySelect area
+skyOptions.forEach(option => {
+    const optionElement = document.createElement("option");
+    optionElement.value = option.name.toLowerCase();
+    optionElement.textContent = option.name;
+    skySelect.appendChild(optionElement);
+});
+
+const updateSky = (event) => {
+    // remove all possible sky classes
+    gardenContent.classList.remove("sunny", "cloudy", "rainy", "snowy");
+    // add the selected sky class to gardenContent so that background color also changes
+    gardenContent.classList.add(event.target.value);
+    // update sky display with emojis
+    const selectedOption = skyOptions.find(option => option.name.toLowerCase() === event.target.value);
+    skyDisplay.textContent = selectedOption.display;
+};
+
+skySelect.addEventListener("change", updateSky);
+// start with su
+gardenContent.classList.add("sunny");
+skyDisplay.textContent = skyOptions[0].display;
 
 updateDisplay();
